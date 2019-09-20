@@ -1,12 +1,24 @@
 pipeline {
-    agent {
-        docker {
-            image 'maven:3-alpine'
-            args '-v /root/.m2:/root/.m2'
-        }
+   
+   agent {
+    docker {
+        image 'maven:3-alpine'
+        label 'docker'
+        registryUrl 'https://hub.docker.com/'
+        registryCredentialsId 'dockerhub'
     }
+}
+	
     stages {
-        stage('Build') {
+        
+		stage('git checkout')
+		{
+		   steps{
+		   checkout scm
+		   }
+		}
+		
+		stage('Build') {
             steps {
                 sh 'mvn -B -DskipTests clean package'
             }
